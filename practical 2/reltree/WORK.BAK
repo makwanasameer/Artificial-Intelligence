@@ -1,0 +1,53 @@
+domains
+	int =integer
+	list=int*
+	pair=xy(int,int)
+	pairlist=pair*
+	
+predicates
+	solution(int,pairlist)
+	sol(pairlist,list,list,list,list)
+	between(int,int,list)
+	member(int,list)
+	del(int,list,list)
+	
+clauses
+	between(N,N,[N]).
+	
+	between(N1,N2,[N1|Tail]):-
+		N1<N2,
+		NN=N1+1,
+		between(NN,N2,Tail).
+	
+	solution(N,S):-
+		between(1,N,Lxy),
+		L1=1-N,
+		L2=N-1,
+		between(L1,L2,Ld1),
+		L3=N+N,
+		between(2,L3,Ld2),
+		sol(S,Lxy,Lxy,Ld1,Ld2),
+		write(S).
+				
+	sol([],[],_,_,_).
+	
+	sol([xy(X,Y)|Tail],Lx,Ly,Ld1,Ld2):-
+		member(X,Lx),
+		del(X,Lx,Lx1),
+		member(Y,Ly),
+		del(Y,Ly,Ly1),
+		U=X-Y,
+		del(U,Ld1,Ld11),
+		V=X+Y,
+		del(V,Ld2,Ld21),
+		sol(Tail,Lx1,Ly1,Ld11,Ld21).
+		
+	member(H,[H|_]).
+	
+	member(I,[H|T]):-
+		member(I,T).
+		
+	del(H,[H|T],T).
+	
+	del(I,[H|T],[H|T1]):-
+		del(I,T,T1).
